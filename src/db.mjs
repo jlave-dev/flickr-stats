@@ -61,6 +61,15 @@ function createDbPhotoSampleFromFlickrPhoto(photo) {
   };
 }
 
+async function shouldSamplePhoto(photo) {
+  const allSamples = await kx('photo_samples')
+    .select('sampled')
+    .where({ photo_id: photo.id })
+    .orderBy('sampled', 'desc');
+
+  return new Date().getDate() !== allSamples[0].sampled.getDate();
+}
+
 export async function getAllPhotos() {
   return kx('photos').select();
 }
@@ -87,5 +96,8 @@ export async function insertPhotoSample(photo) {
   console.log(
     `Trying to insert photo sample ${dbPhotoSample.id} for photo ${photo.id}`,
   );
+  if (!await shouldSamplePhoto(photo)) {
+    return console.log('Photo has already been sampled today. Skipping...');
+  }
   return kx('photo_samples').insert(dbPhotoSample);
 }
