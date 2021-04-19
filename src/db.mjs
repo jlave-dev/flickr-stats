@@ -67,7 +67,7 @@ async function shouldSamplePhoto(photo) {
     .where({ photo_id: photo.id })
     .orderBy('sampled', 'desc');
 
-  return new Date().getDate() !== allSamples[0].sampled.getDate();
+  return allSamples.length === 0 || new Date().getDate() !== allSamples[0].sampled.getDate();
 }
 
 export async function getAllPhotos() {
