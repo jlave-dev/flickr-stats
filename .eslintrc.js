@@ -16,6 +16,7 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    'no-console': 'off',
     'import/extensions': ['error', 'always', {
       mjs: 'always',
     }],
