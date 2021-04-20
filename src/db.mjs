@@ -5,49 +5,30 @@ import { nanoid } from 'nanoid';
 dotenv.config();
 
 export const kx = knex({
-  client: 'pg',
+  client: 'sqlite3',
   connection: {
-    host: process.env.PGHOST,
-    user: process.env.PGUSER,
-    password: process.env.PGPASSWORD,
-    database: process.env.postgres,
+    filename: process.env.SQLITE_FILE,
   },
 });
 
-const photoColumns = [
-  'id',
-  'title',
-  'description',
-  'uploaded',
-  'updated',
-  'taken',
-  'tags',
-  'camera',
-  'url_sq',
-  'url_t',
-  'url_s',
-  'url_l',
-  'url_o',
-  'height_o',
-  'width_o',
-];
-
 function createDbPhotoFromFlickrPhoto(photo) {
-  const newPhoto = {};
-
-  photoColumns.forEach((columnName) => {
-    if (columnName === 'uploaded') {
-      newPhoto.uploaded = new Date(parseInt(photo.dateupload, 10) * 1000);
-    } else if (columnName === 'updated') {
-      newPhoto.updated = new Date(parseInt(photo.lastupdate, 10) * 1000);
-    } else if (columnName === 'taken') {
-      newPhoto.taken = new Date(photo.datetaken);
-    } else {
-      newPhoto[columnName] = photo[columnName];
-    }
-  });
-
-  return newPhoto;
+  return {
+    id: photo.id,
+    title: photo.title,
+    description: JSON.stringify(photo.description),
+    uploaded: new Date(parseInt(photo.dateupload, 10) * 1000),
+    updated: new Date(parseInt(photo.lastupdate, 10) * 1000),
+    taken: new Date(photo.datetaken),
+    tags: photo.tags,
+    camera: photo.camera,
+    url_sq: photo.url_sq,
+    url_t: photo.url_t,
+    url_s: photo.url_s,
+    url_l: photo.url_l,
+    url_o: photo.url_o,
+    height_o: photo.height_o,
+    width_o: photo.width_o,
+  };
 }
 
 function createDbPhotoSampleFromFlickrPhoto(photo) {
