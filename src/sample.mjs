@@ -10,4 +10,6 @@ import * as db from './db.mjs';
 
   // Sample all photos
   await Promise.all(photos.map(db.insertPhotoSample));
+
+  process.exit();
 })();
