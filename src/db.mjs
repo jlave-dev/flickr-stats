@@ -1,11 +1,11 @@
 import dotenv from 'dotenv';
 import knex from 'knex';
 import { nanoid } from 'nanoid';
-import log from './log.mjs';
+import logger from './logger.mjs';
 
 dotenv.config();
 
-export const kx = knex({
+export const db = knex({
   client: 'sqlite3',
   connection: {
     filename: process.env.SQLITE_FILE,
@@ -44,7 +44,7 @@ function createDbPhotoSampleFromFlickrPhoto(photo) {
 }
 
 async function shouldSamplePhoto(photo) {
-  const allSamples = await kx('photo_samples')
+  const allSamples = await db('photo_samples')
     .select('sampled')
     .where({ photo_id: photo.id })
     .orderBy('sampled', 'desc');
@@ -53,22 +53,30 @@ async function shouldSamplePhoto(photo) {
     || new Date().getDate() !== new Date(allSamples[0].sampled).getDate();
 }
 
-export async function getAllPhotos() {
-  return kx('photos').select();
+export async function getPhotos() {
+  return db('photos').select();
 }
 
-export async function getPhoto(id) {
-  return kx('photos').select({ id });
+export async function getPhotoById(id) {
+  return db('photos').select({ id });
+}
+
+export async function getPhotoSamples() {
+  return db('photo_samples').select();
+}
+
+export async function getPhotoSampleById(id) {
+  return db('photo_samples').select({ id });
 }
 
 export async function countPhotos() {
-  return kx('photos').count();
+  return db('photos').count();
 }
 
 export async function insertPhoto(photo) {
   const dbPhoto = createDbPhotoFromFlickrPhoto(photo);
-  log.info(`Trying to insert photo ${photo.id}`);
-  return kx('photos')
+  logger.info(`Trying to insert photo ${photo.id}`);
+  return db('photos')
     .insert(dbPhoto)
     .onConflict('id')
     .merge();
@@ -76,11 +84,11 @@ export async function insertPhoto(photo) {
 
 export async function insertPhotoSample(photo) {
   const dbPhotoSample = createDbPhotoSampleFromFlickrPhoto(photo);
-  log.info(
+  logger.info(
     `Trying to insert photo sample ${dbPhotoSample.id} for photo ${photo.id}`,
   );
   if (!await shouldSamplePhoto(photo)) {
-    return log.warn(`Photo ${photo.id} has already been sampled today. Skipping...`);
+    return logger.warn(`Photo ${photo.id} has already been sampled today. Skipping...`);
   }
-  return kx('photo_samples').insert(dbPhotoSample);
+  return db('photo_samples').insert(dbPhotoSample);
 }

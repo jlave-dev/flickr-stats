@@ -5,7 +5,7 @@ dotenv.config();
 
 // eslint-disable-next-line import/prefer-default-export
 export async function getPhotos() {
-  const extrasFields = [
+  const extras = [
     'views',
     'description',
     'date_upload',
@@ -22,7 +22,7 @@ export async function getPhotos() {
     'count_faves',
     'count_comments',
     'camera',
-  ];
+  ].join(',');
 
   const flickr = new Flickr(Flickr.OAuth.createPlugin(
     process.env.FLICKR_CONSUMER_KEY,
@@ -35,7 +35,7 @@ export async function getPhotos() {
     api_key: process.env.FLICKR_CONSUMER_KEY,
     user_id: '187126842@N07',
     per_page: 500,
-    extras: extrasFields.join(','),
+    extras,
   });
 
   return res.body.photos.photo;

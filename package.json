@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "sample": "node src/sample.mjs",
-    "test": "jasmine test/*.spec.mjs"
+    "test": "jasmine test/*.test.mjs"
   },
   "keywords": [],
   "author": "James Lave <30740613+jlave-dev@users.noreply.github.com> (https://lave.dev/)",
