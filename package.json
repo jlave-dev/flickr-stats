@@ -2,13 +2,12 @@
   "name": "flickr-stats",
   "version": "0.0.1",
   "description": "",
-  "main": "src/index.mjs",
   "scripts": {
     "sample": "node src/sample.mjs",
     "test": "jasmine test/*.spec.mjs"
   },
   "keywords": [],
-  "author": "James Lave <30740613+jlave-dev@users.noreply.github.com> (https://jlave.dev/)",
+  "author": "James Lave <30740613+jlave-dev@users.noreply.github.com> (https://lave.dev/)",
   "license": "MIT",
   "dependencies": {
     "dotenv": "^8.2.0",
@@ -17,6 +16,7 @@
     "knex": "^0.95.4",
     "nanoid": "^3.1.22",
     "open": "^8.0.6",
+    "signale": "^1.4.0",
     "sqlite3": "^5.0.2"
   },
   "devDependencies": {

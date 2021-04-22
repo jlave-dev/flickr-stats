@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import knex from 'knex';
 import { nanoid } from 'nanoid';
+import log from './log.mjs';
 
 dotenv.config();
 
@@ -66,7 +67,7 @@ export async function countPhotos() {
 
 export async function insertPhoto(photo) {
   const dbPhoto = createDbPhotoFromFlickrPhoto(photo);
-  console.log(`Trying to insert photo ${photo.id}`);
+  log.info(`Trying to insert photo ${photo.id}`);
   return kx('photos')
     .insert(dbPhoto)
     .onConflict('id')
@@ -75,11 +76,11 @@ export async function insertPhoto(photo) {
 
 export async function insertPhotoSample(photo) {
   const dbPhotoSample = createDbPhotoSampleFromFlickrPhoto(photo);
-  console.log(
+  log.info(
     `Trying to insert photo sample ${dbPhotoSample.id} for photo ${photo.id}`,
   );
   if (!await shouldSamplePhoto(photo)) {
-    return console.log(`Photo ${photo.id} has already been sampled today. Skipping...`);
+    return log.warn(`Photo ${photo.id} has already been sampled today. Skipping...`);
   }
   return kx('photo_samples').insert(dbPhotoSample);
 }
