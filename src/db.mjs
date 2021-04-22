@@ -79,7 +79,7 @@ export async function insertPhotoSample(photo) {
     `Trying to insert photo sample ${dbPhotoSample.id} for photo ${photo.id}`,
   );
   if (!await shouldSamplePhoto(photo)) {
-    return console.log('Photo has already been sampled today. Skipping...');
+    return console.log(`Photo ${photo.id} has already been sampled today. Skipping...`);
   }
   return kx('photo_samples').insert(dbPhotoSample);
 }
