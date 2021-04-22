@@ -2,9 +2,9 @@ CREATE TABLE IF NOT EXISTS photos (
     id VARCHAR(20) PRIMARY KEY,
     title VARCHAR(255),
     description JSON,
-    uploaded TIMESTAMP,
-    updated TIMESTAMP,
-    taken TIMESTAMP,
+    uploaded TEXT,
+    updated TEXT,
+    taken TEXT,
     tags TEXT,
     camera VARCHAR(255),
     url_sq VARCHAR(255),
@@ -19,9 +19,9 @@ CREATE TABLE IF NOT EXISTS photos (
 CREATE TABLE IF NOT EXISTS photo_samples (
     id VARCHAR(20) PRIMARY KEY,
     photo_id VARCHAR(20) NOT NULL,
-    FOREIGN KEY (photo_id) REFERENCES photos (id),
-    sampled TIMESTAMP,
+    sampled TEXT,
     views INT,
     faves INT,
-    comments INT
+    comments INT,
+    FOREIGN KEY (photo_id) REFERENCES photos(id)
 );
