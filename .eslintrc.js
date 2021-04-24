@@ -1,25 +1,21 @@
 module.exports = {
-  env: {
-    es2021: true,
-    node: true,
-    jasmine: true,
-  },
-  extends: [
-    'airbnb-base',
-  ],
-  settings: {
-    'import/resolver': {
-      node: { extensions: ['.js', '.mjs'] },
+    env: {
+        es2021: true,
+        node: true,
+        jasmine: true,
     },
-  },
-  parserOptions: {
-    ecmaVersion: 12,
-    sourceType: 'module',
-  },
-  rules: {
-    'no-console': 'off',
-    'import/extensions': ['error', 'always', {
-      mjs: 'always',
-    }],
-  },
+    extends: [
+        'eslint:recommended',
+        'plugin:@typescript-eslint/recommended',
+        'plugin:prettier/recommended',
+    ],
+    parser: '@typescript-eslint/parser',
+    parserOptions: {
+        ecmaVersion: 12,
+        sourceType: 'module',
+    },
+    plugins: ['@typescript-eslint', 'prettier'],
+    rules: {
+        'prettier/prettier': 'error',
+    },
 };
