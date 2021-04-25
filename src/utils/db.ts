@@ -10,6 +10,7 @@ export const pool = knex({
     connection: {
         filename: process.env.SQLITE_FILE,
     },
+    useNullAsDefault: true,
 });
 
 export async function getPhotos(): Promise<DBPhoto[]> {
