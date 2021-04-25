@@ -24,12 +24,14 @@ export async function getPhotoSamples(): Promise<PhotoSample[]> {
     return pool.select().from('photo_samples');
 }
 
-export async function getPhotoSampleById(id: string): Promise<PhotoSample> {
-    return pool.first().from('photo_samples').where({ id });
+export async function getPhotoSamplesByPhotoId(photoId: string): Promise<PhotoSample[]> {
+    return pool.select().from('photo_samples').where({ photo_id: photoId });
 }
 
-export async function getMostRecentPhotoSampleById(id: string): Promise<Pick<PhotoSample, 'sampled'> | undefined> {
-    return pool.first('sampled').from('photo_samples').where({ photo_id: id }).orderBy('sampled', 'desc');
+export async function getMostRecentPhotoSampleByPhotoId(
+    photoId: string,
+): Promise<Pick<PhotoSample, 'sampled'> | undefined> {
+    return pool.first('sampled').from('photo_samples').where({ photo_id: photoId }).orderBy('sampled', 'desc');
 }
 
 export async function insertPhoto(photo: DBPhoto): Promise<number[]> {
