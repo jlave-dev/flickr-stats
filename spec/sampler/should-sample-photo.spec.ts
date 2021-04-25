@@ -3,11 +3,11 @@ import shouldSamplePhoto from '../../src/sampler/should-sample-photo';
 
 describe('The shouldSamplePhoto function', () => {
     let fakePhoto;
-    let getMostRecentPhotoSampleByIdSpy;
+    let getMostRecentPhotoSampleByPhotoIdSpy;
 
     beforeEach(() => {
         fakePhoto = { id: '123' };
-        getMostRecentPhotoSampleByIdSpy = spyOn(db, 'getMostRecentPhotoSampleById');
+        getMostRecentPhotoSampleByPhotoIdSpy = spyOn(db, 'getMostRecentPhotoSampleByPhotoId');
     });
 
     it('should be a function', () => {
@@ -20,7 +20,7 @@ describe('The shouldSamplePhoto function', () => {
 
     describe('When there is not a recent sample for a photo', () => {
         beforeEach(() => {
-            getMostRecentPhotoSampleByIdSpy.and.resolveTo(undefined);
+            getMostRecentPhotoSampleByPhotoIdSpy.and.resolveTo(undefined);
         });
 
         it('should return true', async () => {
@@ -32,7 +32,7 @@ describe('The shouldSamplePhoto function', () => {
         describe('When the sample date matches the current date', () => {
             beforeEach(() => {
                 const sampled = new Date().toISOString();
-                getMostRecentPhotoSampleByIdSpy.and.resolveTo({ sampled });
+                getMostRecentPhotoSampleByPhotoIdSpy.and.resolveTo({ sampled });
             });
 
             it('should return false', async () => {
@@ -43,7 +43,7 @@ describe('The shouldSamplePhoto function', () => {
         describe('When the sample date does not match the current date', () => {
             beforeEach(() => {
                 const sampled = new Date('2021-01-01').toISOString();
-                getMostRecentPhotoSampleByIdSpy.and.resolveTo({ sampled });
+                getMostRecentPhotoSampleByPhotoIdSpy.and.resolveTo({ sampled });
             });
 
             it('should return true', async () => {
