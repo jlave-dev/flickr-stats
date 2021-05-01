@@ -8,8 +8,8 @@ export default async function shouldSamplePhoto(photo: FlickrAPIPhoto): Promise<
         return true;
     }
 
-    const nowDate = new Date().getUTCDate();
-    const lastSampledDate = new Date(recentSample.sampled).getUTCDate();
+    const nowDate = new Date().toISOString().slice(0, 10);
+    const lastSampledDate = recentSample.sampled.slice(0, 10);
 
     return nowDate !== lastSampledDate;
 }
