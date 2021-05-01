@@ -13,7 +13,6 @@ export async function getUserData(): Promise<User> {
 
     const { profile } = flickrRes.body;
 
-    console.log(profile);
     return {
         id: profile.id,
         joined: new Date(profile.join_date * 1000).toISOString(),
