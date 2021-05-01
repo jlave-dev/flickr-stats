@@ -20,7 +20,7 @@ async function samplePhoto(photo: FlickrAPIPhoto) {
         }
         await insertPhotoSample(photoSample);
     } catch (error) {
-        logger.error(`Could not insert photo ${photo.id}: ${error}`);
+        logger.error(`Could not insert photo sample ${photo.id}: ${error}`);
         throw error;
     }
 }

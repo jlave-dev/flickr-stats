@@ -16,6 +16,20 @@ CREATE TABLE IF NOT EXISTS photos (
     width_o SMALLINT
 );
 
+CREATE TABLE IF NOT EXISTS users (
+    id VARCHAR(20) PRIMARY KEY,
+    joined TEXT,
+    occupation TEXT,
+    hometown TEXT,
+    first_name TEXT,
+    last_name TEXT,
+    facebook TEXT,
+    twitter TEXT,
+    tumblr TEXT,
+    instagram TEXT,
+    pinterest TEXT
+);
+
 CREATE TABLE IF NOT EXISTS photo_samples (
     id VARCHAR(20) PRIMARY KEY,
     photo_id VARCHAR(20) NOT NULL,
@@ -24,4 +38,19 @@ CREATE TABLE IF NOT EXISTS photo_samples (
     faves INT,
     comments INT,
     FOREIGN KEY (photo_id) REFERENCES photos(id)
+);
+
+CREATE TABLE IF NOT EXISTS user_samples (
+    id VARCHAR(20) PRIMARY KEY,
+    user_id VARCHAR(20) NOT NULL,
+    sampled TEXT,
+    followers INT,
+    following INT,
+    photos INT,
+    views INT,
+    tags INT,
+    geotags INT,
+    faves INT,
+    groups INT,
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );

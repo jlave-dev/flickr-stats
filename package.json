@@ -12,6 +12,7 @@
   "author": "James Lave <30740613+jlave-dev@users.noreply.github.com> (https://lave.dev/)",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.21.1",
     "express": "^4.17.1",
     "flickr-sdk": "^3.10.0",
     "knex": "^0.95.4",

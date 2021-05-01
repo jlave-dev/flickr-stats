@@ -25,6 +25,34 @@ export interface PhotoSample {
     comments: number;
 }
 
+export interface User {
+    id: string;
+    joined: string;
+    occupation: string;
+    hometown: string;
+    first_name: string;
+    last_name: string;
+    facebook: string;
+    twitter: string;
+    tumblr: string;
+    instagram: string;
+    pinterest: string;
+}
+
+export interface UserSample {
+    id: string;
+    user_id: string;
+    sampled: string;
+    followers: number;
+    following: number;
+    photos: number;
+    views: number;
+    tags: number;
+    geotags: number;
+    faves: number;
+    groups: number;
+}
+
 export interface FlickrAPIPhoto {
     id: string;
     title: string;
