@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Flickr from 'flickr-sdk';
-import { FlickrAPIPhoto, User, UserSample } from '../sampler/types';
+import { FlickrAPIPhoto, User, UserSample } from '../types';
 
 export const client = new Flickr(process.env.FLICKR_CONSUMER_KEY);
 

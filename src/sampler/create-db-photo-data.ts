@@ -1,4 +1,4 @@
-import { DBPhoto, FlickrAPIPhoto } from './types';
+import { DBPhoto, FlickrAPIPhoto } from '../types';
 
 export default function createDBPhotoData(photo: FlickrAPIPhoto): DBPhoto {
     return {

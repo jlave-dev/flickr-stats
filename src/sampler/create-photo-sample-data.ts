@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { FlickrAPIPhoto, PhotoSample } from './types';
+import { FlickrAPIPhoto, PhotoSample } from '../types';
 
 export default function createPhotoSampleData(photo: FlickrAPIPhoto): PhotoSample {
     return {

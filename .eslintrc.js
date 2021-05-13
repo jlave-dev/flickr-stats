@@ -3,6 +3,7 @@ module.exports = {
         es2021: true,
         node: true,
         jasmine: true,
+        browser: true,
     },
     extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'],
     parser: '@typescript-eslint/parser',

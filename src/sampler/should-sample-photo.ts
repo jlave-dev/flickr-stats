@@ -1,5 +1,5 @@
 import { getMostRecentPhotoSampleByPhotoId } from '../utils/db';
-import { FlickrAPIPhoto } from './types';
+import { FlickrAPIPhoto } from '../types';
 
 export default async function shouldSamplePhoto(photo: FlickrAPIPhoto): Promise<boolean> {
     const recentSample = await getMostRecentPhotoSampleByPhotoId(photo.id);

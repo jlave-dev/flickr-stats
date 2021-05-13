@@ -1,6 +1,6 @@
 import logger from '../utils/logger';
 import { insertUserSample } from '../utils/db';
-import { UserSample } from './types';
+import { UserSample } from '../types';
 import minimist from 'minimist';
 import createUserSampleData from './create-user-sample-data';
 

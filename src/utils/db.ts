@@ -1,5 +1,5 @@
 import knex from 'knex';
-import { DBPhoto, PhotoSample, User, UserSample } from '../sampler/types';
+import { DBPhoto, PhotoSample, User, UserSample } from '../types';
 
 if (!process.env.SQLITE_FILE) {
     throw new Error('Cannot connect to database: SQLITE_FILE not found in environment.');
@@ -23,6 +23,10 @@ export async function getPhotoById(id: string): Promise<DBPhoto> {
 
 export async function getPhotoSamples(): Promise<PhotoSample[]> {
     return pool.select().from('photo_samples');
+}
+
+export async function getOrderedUserSamples(userId: string): Promise<UserSample[]> {
+    return pool.select().from('user_samples').where({ user_id: userId }).orderBy('sampled', 'desc');
 }
 
 export async function getPhotoSamplesByPhotoId(photoId: string): Promise<PhotoSample[]> {

@@ -1,6 +1,6 @@
 import logger from '../utils/logger';
 import { insertUser } from '../utils/db';
-import { User } from './types';
+import { User } from '../types';
 import minimist from 'minimist';
 
 const argv = minimist(process.argv.slice(2));

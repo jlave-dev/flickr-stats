@@ -2,7 +2,7 @@ import createPhotoSampleData from './create-photo-sample-data';
 import logger from '../utils/logger';
 import { insertPhotoSample } from '../utils/db';
 import shouldSamplePhoto from './should-sample-photo';
-import { FlickrAPIPhoto } from './types';
+import { FlickrAPIPhoto } from '../types';
 import minimist from 'minimist';
 
 const argv = minimist(process.argv.slice(2));

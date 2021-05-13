@@ -1,7 +1,7 @@
 import createDBPhotoData from './create-db-photo-data';
 import logger from '../utils/logger';
 import { insertPhoto } from '../utils/db';
-import { FlickrAPIPhoto } from './types';
+import { FlickrAPIPhoto } from '../types';
 import minimist from 'minimist';
 
 const argv = minimist(process.argv.slice(2));

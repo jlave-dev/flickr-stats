@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { UserSample } from './types';
+import { UserSample } from '../types';
 
 export default function createUserSampleData(userSample: Omit<UserSample, 'id' | 'sampled'>): UserSample {
     return {
