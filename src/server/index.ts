@@ -1,7 +1,7 @@
 import express from 'express';
 import Flickr from 'flickr-sdk';
-import fs from 'fs';
-import https from 'https';
+// import fs from 'fs';
+// import https from 'https';
 import path from 'path';
 import * as db from '../utils/db';
 
@@ -83,11 +83,15 @@ app.get('/oauth/callback', async (req, res) => {
     res.send();
 });
 
-const httpsOptions = {
-    key: fs.readFileSync(path.resolve(process.cwd(), 'src/server/security/cert.key')),
-    cert: fs.readFileSync(path.resolve(process.cwd(), 'src/server/security/cert.pem')),
-};
+// const httpsOptions = {
+//     key: fs.readFileSync(path.resolve(process.cwd(), 'src/server/security/cert.key')),
+//     cert: fs.readFileSync(path.resolve(process.cwd(), 'src/server/security/cert.pem')),
+// };
 
-https.createServer(httpsOptions, app).listen(port, () => {
-    console.log(`App listening at https://localhost:${port}`);
+// https.createServer(httpsOptions, app).listen(port, () => {
+//     console.log(`App listening at https://localhost:${port}`);
+// });
+
+app.listen(port, () => {
+    console.log(`App listening at http://localhost:${port}`);
 });
