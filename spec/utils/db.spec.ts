@@ -1,6 +1,7 @@
 import * as db from '../../src/utils/db';
 import fakePhotos from '../data/photos';
 import fakePhotoSamples from '../data/photo-samples';
+import fakeUserSamples from '../data/user-samples';
 
 describe('The DB module', () => {
     beforeAll(async () => {
@@ -10,11 +11,15 @@ describe('The DB module', () => {
         for (const fakePhotoSample of fakePhotoSamples.slice(0, 4)) {
             await db.pool.insert(fakePhotoSample).into('photo_samples');
         }
+        for (const fakeUserSample of fakeUserSamples.slice(0, 4)) {
+            await db.pool.insert(fakeUserSample).into('user_samples');
+        }
     });
 
     afterAll(async () => {
         await db.pool.delete().from('photos');
         await db.pool.delete().from('photo_samples');
+        await db.pool.delete().from('user_samples');
     });
 
     describe('The getPhotos method', () => {
@@ -73,6 +78,31 @@ describe('The DB module', () => {
         it('should return an array with 4 photo samples', () => {
             expect(Array.isArray(photoSamples)).toBeTrue();
             expect(photoSamples.length).toBe(4);
+        });
+    });
+
+    describe('The getUserSamples method', () => {
+        let userSamples;
+        let userId;
+
+        it('should exist', () => {
+            expect(db.getOrderedUserSamples).toEqual(jasmine.any(Function));
+        });
+
+        describe('When a user ID is passed', () => {
+            beforeAll(async () => {
+                userId = '187126842@N07';
+                userSamples = await db.getOrderedUserSamples(userId);
+            });
+
+            it('should return an array with 3 user samples', () => {
+                expect(Array.isArray(userSamples)).toBeTrue();
+                expect(userSamples.length).toBe(3);
+            });
+
+            it('the first sample should be the most recent', () => {
+                expect(userSamples[0].sampled).toContain('2021-05-10');
+            });
         });
     });
 
