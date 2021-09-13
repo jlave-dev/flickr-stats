@@ -1,12 +1,12 @@
 import logger from '../utils/logger';
 import { insertUserSample } from '../utils/db';
-import { UserSample } from '../types';
+import { IUserSample } from '../types';
 import minimist from 'minimist';
 import createUserSampleData from './create-user-sample-data';
 
 const argv = minimist(process.argv.slice(2));
 
-export default async function sampleUserStats(userStats: Omit<UserSample, 'id' | 'sampled'>): Promise<void> {
+export default async function sampleUserStats(userStats: Omit<IUserSample, 'id' | 'sampled'>): Promise<void> {
     const userSample = createUserSampleData(userStats);
     logger.info(`Trying to insert user sample ${userSample.id}`);
     try {

@@ -1,8 +1,10 @@
-export default [
+import { IUserSample } from '../../src/types';
+
+const fakeUserSamples: IUserSample[] = [
     {
         id: 'sUKhKCnSk7A50K3nYHrp',
         user_id: '187126842@N07',
-        sampled: '2021-05-08T23:50:06.668Z',
+        sampled: new Date('2021-05-08T23:50:06.668Z'),
         followers: 62,
         following: 168,
         photos: 220,
@@ -15,7 +17,7 @@ export default [
     {
         id: 'ooiXACNkupQcOUtCHyoU',
         user_id: '187126842@N07',
-        sampled: '2021-05-09T23:50:08.088Z',
+        sampled: new Date('2021-05-09T23:50:08.088Z'),
         followers: 62,
         following: 168,
         photos: 221,
@@ -28,7 +30,7 @@ export default [
     {
         id: 'Df39_WT8pN67ZNvj4wD5',
         user_id: '187126842@N07',
-        sampled: '2021-05-10T23:50:10.156Z',
+        sampled: new Date('2021-05-10T23:50:10.156Z'),
         followers: 62,
         following: 168,
         photos: 222,
@@ -39,3 +41,5 @@ export default [
         groups: 85,
     },
 ];
+
+export default fakeUserSamples;

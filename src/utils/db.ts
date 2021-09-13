@@ -1,56 +1,53 @@
-import knex from 'knex';
-import { DBPhoto, PhotoSample, User, UserSample } from '../types';
+import { Photo, PhotoSample, User, UserSample } from '../sequelize';
+import {
+    IPhoto,
+    IPhotoModel,
+    IPhotoSample,
+    IPhotoSampleModel,
+    IUser,
+    IUserModel,
+    IUserSample,
+    IUserSampleModel,
+} from '../types';
 
-if (!process.env.SQLITE_FILE) {
-    throw new Error('Cannot connect to database: SQLITE_FILE not found in environment.');
+export async function getPhotos(): Promise<IPhotoModel[]> {
+    return Photo.findAll();
 }
 
-export const pool = knex({
-    client: 'sqlite3',
-    connection: {
-        filename: process.env.SQLITE_FILE,
-    },
-    useNullAsDefault: true,
-});
-
-export async function getPhotos(): Promise<DBPhoto[]> {
-    return pool.select().from('photos');
+export async function getPhotoById(id: string): Promise<IPhotoModel | null> {
+    return Photo.findByPk(id);
 }
 
-export async function getPhotoById(id: string): Promise<DBPhoto> {
-    return pool.first().from('photos').where({ id });
+export async function getPhotoSamples(): Promise<IPhotoSampleModel[]> {
+    return PhotoSample.findAll();
 }
 
-export async function getPhotoSamples(): Promise<PhotoSample[]> {
-    return pool.select().from('photo_samples');
+export async function getOrderedUserSamples(userId: string): Promise<IUserSampleModel[]> {
+    return UserSample.findAll({ where: { user_id: userId }, order: [['sampled', 'desc']] });
 }
 
-export async function getOrderedUserSamples(userId: string): Promise<UserSample[]> {
-    return pool.select().from('user_samples').where({ user_id: userId }).orderBy('sampled', 'desc');
-}
-
-export async function getPhotoSamplesByPhotoId(photoId: string): Promise<PhotoSample[]> {
-    return pool.select().from('photo_samples').where({ photo_id: photoId });
+export async function getPhotoSamplesByPhotoId(photoId: string): Promise<IPhotoSampleModel[]> {
+    return PhotoSample.findAll({ where: { photo_id: photoId } });
 }
 
 export async function getMostRecentPhotoSampleByPhotoId(
     photoId: string,
-): Promise<Pick<PhotoSample, 'sampled'> | undefined> {
-    return pool.first('sampled').from('photo_samples').where({ photo_id: photoId }).orderBy('sampled', 'desc');
+): Promise<Pick<IPhotoSampleModel, 'sampled'> | null> {
+    return PhotoSample.findOne({ attributes: ['sampled'], where: { photo_id: photoId }, order: [['sampled', 'desc']] });
 }
 
-export async function insertPhoto(photo: DBPhoto): Promise<number[]> {
-    return pool.insert(photo).into('photos').onConflict('id').merge();
+export async function insertPhoto(photo: IPhoto): Promise<[IPhotoModel, boolean | null]> {
+    return Photo.upsert(photo);
 }
 
-export async function insertPhotoSample(photoSample: PhotoSample): Promise<number[]> {
-    return pool.insert(photoSample).into('photo_samples');
+export async function insertPhotoSample(photoSample: IPhotoSample): Promise<IPhotoSampleModel> {
+    return PhotoSample.create(photoSample);
 }
 
-export async function insertUser(user: User): Promise<number[]> {
-    return pool.insert(user).into('users').onConflict('id').merge();
+export async function insertUser(user: IUser): Promise<[IUserModel, boolean | null]> {
+    return User.upsert(user);
 }
 
-export async function insertUserSample(userSample: UserSample): Promise<number[]> {
-    return pool.insert(userSample).into('user_samples');
+export async function insertUserSample(userSample: IUserSample): Promise<IUserSampleModel> {
+    return UserSample.create(userSample);
 }

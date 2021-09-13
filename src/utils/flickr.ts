@@ -1,9 +1,9 @@
 import Flickr from 'flickr-sdk';
-import { FlickrAPIPhoto, User, UserSample } from '../types';
+import { IFlickrPhoto, IUser, IUserSample } from '../types';
 
 export const client = new Flickr(process.env.FLICKR_CONSUMER_KEY);
 
-export async function getPhotos(): Promise<FlickrAPIPhoto[]> {
+export async function getPhotos(): Promise<IFlickrPhoto[]> {
     const extras = [
         'camera',
         'count_comments',
@@ -31,7 +31,7 @@ export async function getPhotos(): Promise<FlickrAPIPhoto[]> {
     return res.body.photos.photo;
 }
 
-export async function getUserData(): Promise<User> {
+export async function getUserData(): Promise<IUser> {
     const flickrRes = await client.profile.getProfile({
         user_id: process.env.FLICKR_USER_ID,
         per_page: 500,
@@ -42,7 +42,7 @@ export async function getUserData(): Promise<User> {
 
     return {
         id: profile.id,
-        joined: new Date(profile.join_date * 1000).toISOString(),
+        joined: new Date(profile.join_date * 1000),
         occupation: profile.occupation,
         hometown: profile.hometown,
         first_name: profile.first_name,
@@ -55,7 +55,7 @@ export async function getUserData(): Promise<User> {
     };
 }
 
-export async function getUserStats(): Promise<Omit<UserSample, 'id' | 'sampled'>> {
+export async function getUserStats(): Promise<Omit<IUserSample, 'id' | 'sampled'>> {
     // First make an API request to get follow and photo counts
     let flickrRes = await client.people.getInfo({
         user_id: process.env.FLICKR_USER_ID,

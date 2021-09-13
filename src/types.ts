@@ -1,10 +1,12 @@
-export interface DBPhoto {
+import { Model } from 'sequelize';
+
+export interface IPhoto {
     id: string;
     title: string;
     description: string;
-    uploaded: string;
-    updated: string;
-    taken: string;
+    uploaded: Date;
+    updated: Date;
+    taken: Date;
     tags: string;
     camera: string;
     url_sq: string;
@@ -16,18 +18,22 @@ export interface DBPhoto {
     width_o: number;
 }
 
-export interface PhotoSample {
+export interface IPhotoModel extends Model, IPhoto {}
+
+export interface IPhotoSample {
     id: string;
     photo_id: string;
-    sampled: string;
+    sampled: Date;
     views: number;
     faves: number;
     comments: number;
 }
 
-export interface User {
+export interface IPhotoSampleModel extends Model, IPhotoSample {}
+
+export interface IUser {
     id: string;
-    joined: string;
+    joined: Date;
     occupation: string;
     hometown: string;
     first_name: string;
@@ -39,10 +45,12 @@ export interface User {
     pinterest: string;
 }
 
-export interface UserSample {
+export interface IUserModel extends Model, IUser {}
+
+export interface IUserSample {
     id: string;
     user_id: string;
-    sampled: string;
+    sampled: Date;
     followers: number;
     following: number;
     photos: number;
@@ -53,7 +61,9 @@ export interface UserSample {
     groups: number;
 }
 
-export interface FlickrAPIPhoto {
+export interface IUserSampleModel extends Model, IUserSample {}
+
+export interface IFlickrPhoto {
     id: string;
     title: string;
     description: { _content: string };
