@@ -1,5 +1,6 @@
 import { Dialect, Sequelize } from 'sequelize';
 import fs from 'fs';
+import path from 'path';
 
 // Connect to CockroachDB through Sequelize.
 const sequelize = new Sequelize({
@@ -13,7 +14,7 @@ const sequelize = new Sequelize({
         ...(process.env.SEQUELIZE_CERT
             ? {
                   ssl: {
-                      ca: fs.readFileSync(process.env.SEQUELIZE_CERT as string).toString(),
+                      ca: fs.readFileSync(path.resolve(__dirname, process.env.SEQUELIZE_CERT as string)).toString(),
                   },
               }
             : {}),
