@@ -1,32 +1,36 @@
 import * as db from '../../src/utils/db';
-import fakePhotos from '../data/photos';
-import fakePhotoSamples from '../data/photo-samples';
-import fakeUserSamples from '../data/user-samples';
+import { fakePhotos, fakePhotoSamples, fakeUsers, fakeUserSamples } from '../data/index';
+import { Photo, PhotoSample, User, UserSample } from '../../src/sequelize';
+import { IPhotoModel, IPhotoSample } from '../../src/types';
+
+async function clearPhotos() {
+    await Photo.destroy({ where: {} });
+}
+
+async function clearUsers() {
+    await User.destroy({ where: {} });
+}
+
+async function clearPhotoSamples() {
+    await PhotoSample.destroy({ where: {} });
+}
+
+async function clearUserSamples() {
+    await UserSample.destroy({ where: {} });
+}
 
 describe('The DB module', () => {
-    beforeAll(async () => {
-        for (const fakePhoto of fakePhotos.slice(0, 2)) {
-            await db.pool.insert(fakePhoto).into('photos');
-        }
-        for (const fakePhotoSample of fakePhotoSamples.slice(0, 4)) {
-            await db.pool.insert(fakePhotoSample).into('photo_samples');
-        }
-        for (const fakeUserSample of fakeUserSamples.slice(0, 4)) {
-            await db.pool.insert(fakeUserSample).into('user_samples');
-        }
-    });
-
-    afterAll(async () => {
-        await db.pool.delete().from('photos');
-        await db.pool.delete().from('photo_samples');
-        await db.pool.delete().from('user_samples');
-    });
-
     describe('The getPhotos method', () => {
         let photos;
 
         beforeAll(async () => {
+            // Insert photos
+            await Promise.all(fakePhotos.slice(0, 2).map(db.insertPhoto));
             photos = await db.getPhotos();
+        });
+
+        afterAll(async () => {
+            await Promise.all([clearPhotos()]);
         });
 
         it('should exist', () => {
@@ -42,13 +46,21 @@ describe('The DB module', () => {
     describe('The getPhotoById method', () => {
         let photo;
 
+        beforeAll(async () => {
+            await db.insertPhoto(fakePhotos[0]);
+        });
+
+        afterAll(async () => {
+            await Promise.all([clearPhotos()]);
+        });
+
         describe(`When the ID doesn't exist`, () => {
             beforeAll(async () => {
                 photo = await db.getPhotoById('1');
             });
 
-            it('should return undefined', () => {
-                expect(photo).toBeUndefined();
+            it('should return null', () => {
+                expect(photo).toBeNull();
             });
         });
 
@@ -68,22 +80,42 @@ describe('The DB module', () => {
         let photoSamples;
 
         beforeAll(async () => {
+            // Insert photo
+            await db.insertPhoto(fakePhotos[0]);
+            // Insert photo samples
+            await Promise.all(fakePhotoSamples.slice(0, 2).map(db.insertPhotoSample));
+
             photoSamples = await db.getPhotoSamples();
+        });
+
+        afterAll(async () => {
+            await Promise.all([clearPhotos(), clearPhotoSamples()]);
         });
 
         it('should exist', () => {
             expect(db.getPhotoSamples).toEqual(jasmine.any(Function));
         });
 
-        it('should return an array with 4 photo samples', () => {
+        it('should return an array with 2 photo samples', () => {
             expect(Array.isArray(photoSamples)).toBeTrue();
-            expect(photoSamples.length).toBe(4);
+            expect(photoSamples.length).toBe(2);
         });
     });
 
     describe('The getUserSamples method', () => {
         let userSamples;
         let userId;
+
+        beforeAll(async () => {
+            // Insert user
+            await db.insertUser(fakeUsers[0]);
+            // Insert user samples
+            await Promise.all(fakeUserSamples.map(db.insertUserSample));
+        });
+
+        afterAll(async () => {
+            await Promise.all([clearUsers(), clearUserSamples()]);
+        });
 
         it('should exist', () => {
             expect(db.getOrderedUserSamples).toEqual(jasmine.any(Function));
@@ -101,13 +133,24 @@ describe('The DB module', () => {
             });
 
             it('the first sample should be the most recent', () => {
-                expect(userSamples[0].sampled).toContain('2021-05-10');
+                expect(userSamples[0].sampled.toDateString()).toContain('Mon May 10 2021');
             });
         });
     });
 
     describe('The getPhotoSamplesByPhotoId method', () => {
         let photoSamples;
+
+        beforeAll(async () => {
+            // Insert photo
+            await db.insertPhoto(fakePhotos[0]);
+            // Insert photo samples
+            await Promise.all(fakePhotoSamples.map(db.insertPhotoSample));
+        });
+
+        afterAll(async () => {
+            await Promise.all([clearPhotos(), clearPhotoSamples()]);
+        });
 
         it('should exist', () => {
             expect(db.getPhotoSamplesByPhotoId).toEqual(jasmine.any(Function));
@@ -139,6 +182,17 @@ describe('The DB module', () => {
     describe('The getMostRecentPhotoSampleByPhotoId method', () => {
         let photoSample;
 
+        beforeAll(async () => {
+            // Insert photo
+            await db.insertPhoto(fakePhotos[0]);
+            // Insert photo samples
+            await Promise.all(fakePhotoSamples.map(db.insertPhotoSample));
+        });
+
+        afterAll(async () => {
+            await Promise.all([clearPhotos(), clearPhotoSamples()]);
+        });
+
         it('should exist', () => {
             expect(db.getMostRecentPhotoSampleByPhotoId).toEqual(jasmine.any(Function));
         });
@@ -148,8 +202,8 @@ describe('The DB module', () => {
                 photoSample = await db.getMostRecentPhotoSampleByPhotoId('1');
             });
 
-            it('should return undefined', () => {
-                expect(photoSample).toBeUndefined();
+            it('should return null', () => {
+                expect(photoSample).toBeNull();
             });
         });
 
@@ -160,7 +214,7 @@ describe('The DB module', () => {
 
             it('should return an object with the most recent sampled date', () => {
                 expect(photoSample).toEqual(jasmine.any(Object));
-                expect(photoSample.sampled).toEqual('2021-04-24T16:41:33.084Z');
+                expect(photoSample.sampled).toEqual(new Date('2021-04-24T16:41:33.084Z'));
             });
         });
     });
@@ -175,18 +229,19 @@ describe('The DB module', () => {
 
             beforeAll(async () => {
                 fakePhoto = { ...fakePhotos[2] };
-                await db.pool.insert(fakePhoto).into('photos');
+                await db.insertPhoto(fakePhoto);
             });
 
             afterAll(async () => {
-                await db.pool.delete().from('photos').where({ id: fakePhoto.id });
+                await Photo.destroy({ where: { id: fakePhoto.id } });
             });
 
             it('should update the existing row', async () => {
                 fakePhoto.title = `I Don't Paint Flowers`;
                 await db.insertPhoto(fakePhoto);
                 const updatedPhoto = await db.getPhotoById(fakePhoto.id);
-                expect(updatedPhoto.title).toEqual(fakePhoto.title);
+                expect(updatedPhoto).not.toBeNull();
+                expect((<IPhotoModel>updatedPhoto).title).toEqual(fakePhoto.title);
             });
         });
 
@@ -198,13 +253,14 @@ describe('The DB module', () => {
             });
 
             afterAll(async () => {
-                await db.pool.delete().from('photos').where({ id: fakePhoto.id });
+                await Photo.destroy({ where: { id: fakePhoto.id } });
             });
 
             it('should create a new row', async () => {
                 await db.insertPhoto(fakePhoto);
                 const newPhoto = await db.getPhotoById(fakePhoto.id);
-                expect(newPhoto.title).toEqual(fakePhoto.title);
+                expect(newPhoto).not.toBeNull();
+                expect((<IPhotoModel>newPhoto).title).toEqual(fakePhoto.title);
             });
         });
     });
@@ -215,15 +271,17 @@ describe('The DB module', () => {
         });
 
         describe('When the photo sample already exists', () => {
-            let fakePhotoSample;
+            const fakePhotoSample = fakePhotoSamples[0];
 
             beforeAll(async () => {
-                fakePhotoSample = { ...fakePhotoSamples[4] };
-                await db.pool.insert(fakePhotoSample).into('photo_samples');
+                // Insert photo
+                await db.insertPhoto(fakePhotos[0]);
+                // Insert photo sample
+                await db.insertPhotoSample(fakePhotoSample);
             });
 
             afterAll(async () => {
-                await db.pool.delete().from('photo_samples').where({ id: fakePhotoSample.id });
+                await Promise.all([clearPhotos(), clearPhotoSamples()]);
             });
 
             it('should throw an error', async () => {
@@ -231,21 +289,23 @@ describe('The DB module', () => {
             });
         });
 
-        describe('When the photo does not exist', () => {
-            let fakePhotoSample;
+        describe('When the photo sample does not exist', () => {
+            const fakePhotoSample = fakePhotoSamples[0];
 
             beforeAll(async () => {
-                fakePhotoSample = { ...fakePhotoSamples[4] };
+                // Insert photo
+                await db.insertPhoto(fakePhotos[0]);
             });
 
             afterAll(async () => {
-                await db.pool.delete().from('photo_samples').where({ id: fakePhotoSample.id });
+                await Promise.all([clearPhotos(), clearPhotoSamples()]);
             });
 
             it('should create a new row', async () => {
                 await db.insertPhotoSample(fakePhotoSample);
-                const newPhotoSample = await db.pool.first().from('photo_samples').where({ id: fakePhotoSample.id });
-                expect(newPhotoSample.id).toEqual(fakePhotoSample.id);
+                const newPhotoSample = await PhotoSample.findOne({ where: { id: fakePhotoSample.id } });
+                expect(newPhotoSample).not.toBeNull();
+                expect((<IPhotoSample>newPhotoSample).id).toEqual(fakePhotoSample.id);
             });
         });
     });

@@ -1,15 +1,15 @@
 import { getMostRecentPhotoSampleByPhotoId } from '../utils/db';
-import { FlickrAPIPhoto } from '../types';
+import { IFlickrPhoto } from '../types';
 
-export default async function shouldSamplePhoto(photo: FlickrAPIPhoto): Promise<boolean> {
+export default async function shouldSamplePhoto(photo: IFlickrPhoto): Promise<boolean> {
     const recentSample = await getMostRecentPhotoSampleByPhotoId(photo.id);
 
     if (!recentSample) {
         return true;
     }
 
-    const nowDate = new Date().toISOString().slice(0, 10);
-    const lastSampledDate = recentSample.sampled.slice(0, 10);
+    const nowDate = new Date().toDateString();
+    const lastSampledDate = recentSample.sampled.toDateString();
 
     return nowDate !== lastSampledDate;
 }

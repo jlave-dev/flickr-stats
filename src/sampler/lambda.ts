@@ -1,5 +1,5 @@
 import sample from './sample';
 
-(async () => {
+exports.handler = async () => {
     await sample();
-})();
+};

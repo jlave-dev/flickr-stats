@@ -31,7 +31,7 @@ describe('The shouldSamplePhoto function', () => {
     describe('When there is a recent sample for a photo', () => {
         describe('When the sample date matches the current date', () => {
             beforeEach(() => {
-                const sampled = new Date().toISOString();
+                const sampled = new Date();
                 getMostRecentPhotoSampleByPhotoIdSpy.and.resolveTo({ sampled });
             });
 
@@ -42,7 +42,7 @@ describe('The shouldSamplePhoto function', () => {
 
         describe('When the sample date does not match the current date', () => {
             beforeEach(() => {
-                const sampled = new Date('2021-01-01').toISOString();
+                const sampled = new Date('2021-01-01');
                 getMostRecentPhotoSampleByPhotoIdSpy.and.resolveTo({ sampled });
             });
 

@@ -1,16 +1,16 @@
 import createDBPhotoData from './create-db-photo-data';
 import logger from '../utils/logger';
 import { insertPhoto } from '../utils/db';
-import { FlickrAPIPhoto } from '../types';
+import { IFlickrPhoto } from '../types';
 import minimist from 'minimist';
 
 const argv = minimist(process.argv.slice(2));
 
-async function updatePhoto(photo: FlickrAPIPhoto) {
+async function updatePhoto(photo: IFlickrPhoto) {
     const dbPhoto = createDBPhotoData(photo);
     logger.info(`Trying to insert photo ${photo.id} or update it if it exists`);
     try {
-        if (argv['dry-run']) {
+        if (argv['dry-run'] || process.env.DRY_RUN === 'true') {
             return logger.debug('Skipping database operation because argument --dry-run was passed');
         }
         await insertPhoto(dbPhoto);
@@ -20,7 +20,7 @@ async function updatePhoto(photo: FlickrAPIPhoto) {
     }
 }
 
-export default async function updatePhotos(photos: FlickrAPIPhoto[]): Promise<void> {
+export default async function updatePhotos(photos: IFlickrPhoto[]): Promise<void> {
     for (const photo of photos) {
         await updatePhoto(photo);
     }
