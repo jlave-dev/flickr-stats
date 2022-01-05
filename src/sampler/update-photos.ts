@@ -10,7 +10,7 @@ async function updatePhoto(photo: IFlickrPhoto) {
     const dbPhoto = createDBPhotoData(photo);
     logger.info(`Trying to insert photo ${photo.id} or update it if it exists`);
     try {
-        if (argv['dry-run']) {
+        if (argv['dry-run'] || process.env.DRY_RUN === 'true') {
             return logger.debug('Skipping database operation because argument --dry-run was passed');
         }
         await insertPhoto(dbPhoto);

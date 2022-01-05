@@ -14,7 +14,7 @@ export default async function sampleUserStats(userStats: Omit<IUserSample, 'id' 
         //     return logger.warn(`Photo ${photo.id} has already been sampled today. Skipping...`);
         // }
 
-        if (argv['dry-run']) {
+        if (argv['dry-run'] || process.env.DRY_RUN === 'true') {
             return logger.debug('Skipping database operation because argument --dry-run was passed');
         }
         await insertUserSample(userSample);

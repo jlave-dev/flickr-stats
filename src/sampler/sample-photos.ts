@@ -11,7 +11,7 @@ async function samplePhoto(photo: IFlickrPhoto) {
     const photoSample = createPhotoSampleData(photo);
     logger.info(`Trying to insert photo sample ${photoSample.id} for photo ${photo.id}`);
     try {
-        if (argv['dry-run']) {
+        if (argv['dry-run'] || process.env.DRY_RUN === 'true') {
             return logger.debug('Skipping database operation because argument --dry-run was passed');
         }
 
